@@ -1,6 +1,5 @@
 import streamlit as st
 import openai
-import os
 
 # --- Page Config ---
 st.set_page_config(page_title="🎯 Prompt Refiner", layout="wide")
@@ -33,7 +32,7 @@ with st.sidebar:
 
     api_key_input = st.text_input("Enter your OpenAI API Key", type="password")
     if api_key_input:
-        openai.api_key = api_key_input
+        client = openai.OpenAI(api_key=api_key_input)
     else:
         st.warning("⚠️ Please enter your OpenAI API key to use the app.")
 
@@ -89,8 +88,8 @@ Be clear, concise, and helpful.
 
                 user_input = f"Role: {role}\nContext: {context}\nTask: {task}"
 
-                # API Call (one-time only)
-                response = openai.ChatCompletion.create(
+                # API Call (new syntax)
+                response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": system_message},
